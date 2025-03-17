@@ -4,12 +4,27 @@
 1 kilogram = 2.204 pound
 */
 
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js"
+import { getDatabase } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js"
+
+
+const firebaseConfig = {
+   databaseURL: process.env.DATABASE_URL
+};
+
+
+const app = initializeApp(firebaseConfig)
+const database = getDatabase(app)
+
 document.addEventListener('DOMContentLoaded', () => {
     const convertButton = document.querySelector('button')
     convertButton.addEventListener('click', onConvertClickButton)
 })
 
 function onConvertClickButton() {
+    console.log(firebaseConfig)
+
     const inputValue = document.querySelector('input').value
     const outputValueFeet =  (inputValue * 3.281).toFixed(2)
     const outputValueGallons =  (inputValue * 0.264).toFixed(2)
