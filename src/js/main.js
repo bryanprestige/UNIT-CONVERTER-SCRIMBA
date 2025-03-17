@@ -4,26 +4,34 @@
 1 kilogram = 2.204 pound
 */
 
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js"
-import { getDatabase } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js"
+import { getDatabase,
+    ref,
+    push,
+    onValue
+            } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js"
 
 
 const firebaseConfig = {
-   databaseURL: process.env.DATABASE_URL
+   databaseURL: "https://unit-converter-scrimba-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
+const referenceInDB = ref(database, "inputs")
 
 document.addEventListener('DOMContentLoaded', () => {
     const convertButton = document.querySelector('button')
     convertButton.addEventListener('click', onConvertClickButton)
 })
 
+onValue(referenceInDB, function(snapshot) {
+    console.log(snapshot)
+})
+
+
 function onConvertClickButton() {
-    console.log(firebaseConfig)
 
     const inputValue = document.querySelector('input').value
     const outputValueFeet =  (inputValue * 3.281).toFixed(2)
@@ -36,4 +44,6 @@ function onConvertClickButton() {
     document.querySelector('#length').textContent = `${inputValue} meters = ${outputValueFeet} feet | ${inputValue} feet = ${outputValueMeters} meters`
     document.querySelector('#volume').textContent = `${inputValue} liters = ${outputValueGallons} gallons | ${inputValue} gallons = ${outputValueLiters} liters`
     document.querySelector('#mass').textContent = `${inputValue} kilograms = ${outputValuePounds} pounds | ${inputValue} pounds = ${outputValueKilograms} kilograms`
+
+    push(referenceInDB, inputValue)
 }
